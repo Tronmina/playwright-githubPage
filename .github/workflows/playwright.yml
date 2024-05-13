@@ -57,9 +57,6 @@ jobs:
       with:
         node-version: lts/*
 
-    - name: Install dependencies
-      run: npm ci
-
     # we now download the reports uploaded previously to merge them and create one single html report
     - name: Download reports from GitHub Actions Artifacts
       uses: actions/download-artifact@v3
