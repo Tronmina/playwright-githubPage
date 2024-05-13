@@ -62,7 +62,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: playwright-report # name of the file stored as artifact (as uploaded at the previous job)
-        path: playwright-report/ # name of the folder where the download will be saved
+        path: playwright-report # name of the folder where the download will be saved
 
     - name: /[OPTIONAL] Upload full html report to artifacts for history
       if: always()
