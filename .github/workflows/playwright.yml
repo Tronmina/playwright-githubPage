@@ -16,7 +16,7 @@ jobs:
     - name: Setup Node.js 📦
       uses: actions/setup-node@v3
       with:
-        node-version: 18
+        node-version: 20
 
     - name: corepack enable 📦
       run: corepack enable && yarn --version && yarn set version 4.1.1 
@@ -58,7 +58,7 @@ jobs:
     - name: Setup Node.js 📦
       uses: actions/setup-node@v3
       with:
-        node-version: 18
+        node-version: 20
 
     # we now download the reports uploaded previously to merge them and create one single html report
     - name: Download reports from GitHub Actions Artifacts
