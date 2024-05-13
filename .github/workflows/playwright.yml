@@ -18,7 +18,10 @@ jobs:
       with:
         node-version: lts/*
 
-    - name: Install dependencies 📦
+    - name: corepack enable 📦
+      run: corepack enable && yarn --version && yarn set version 4.1.1 
+
+    - name: yarn install 📦
       run: yarn install
 
     - name: Install Playwright Browsers 📦
