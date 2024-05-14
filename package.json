@@ -3,7 +3,8 @@
   "packageManager": "yarn@4.2.1",
   "devDependencies": {
     "@playwright/test": "^1.44.0",
-    "@types/node": "^20.12.11"
+    "@types/node": "^20.12.11",
+    "playwright-slack-report": "^1.1.72"
   },
   "scripts": {
     "test": "playwright test"
