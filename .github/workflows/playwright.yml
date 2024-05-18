@@ -1,15 +1,20 @@
+# 工作流程名稱
 name: Playwright Tests
+# 觸發條件
 on:
   push:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+
+# 工作
 jobs:
+
+  # 第一個工作：設置並運行測試
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-
     - name: Checkout 🛎
       uses: actions/checkout@v3
 
@@ -46,6 +51,7 @@ jobs:
         path: playwright-report/
         retention-days: 10
 
+  # 第二個工作：合併報告並上傳
   publish_html_report:
     name: Publish HTML Report
     if: always()
@@ -96,3 +102,30 @@ jobs:
       
     - name: Write URL in summary
       run: echo "### Test results (link available after 20 secs) - https://${{ github.repository_owner }}.github.io/playwright-githubpage/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
+
+# 第三個工作：刪除舊的部署資料
+  delete_old_folders:
+    name: Delete old folders from github pages
+    runs-on: ubuntu-latest
+    permissions:
+        contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with: 
+          ref: gh-pages
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Pray then Run the script
+        run: python rm_old_folders.py --n-days ${{ github.event.inputs.n_days }} --folder-name ${{ github.event.inputs.folder_name }}
+
+      - name: Commit all changed files back to the repository
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: gh-pages
+          commit_message: Delete folders older than ${{ github.event.inputs.n_days }} days
