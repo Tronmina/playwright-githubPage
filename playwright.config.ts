@@ -8,13 +8,14 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI ? 
   [
-      ["line"],
-      ["html", { open: "never" }],
-      ["junit", { outputFile: "junit.xml" }]
-      ['playwright-json-summary-reporter'],
-  ] : [
-      ["html", { open: "never" }],
-      ['playwright-json-summary-reporter'],
+    ["line"],
+    ["html", { open: "never" }],
+    ["junit", { outputFile: "junit.xml" }],
+    ['playwright-json-summary-reporter'],
+  ] : 
+  [
+    ["html", { open: "never" }],
+    ['playwright-json-summary-reporter'],
   ],
   use: {
     trace: 'on-first-retry',
