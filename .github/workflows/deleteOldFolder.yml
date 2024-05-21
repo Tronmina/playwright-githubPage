@@ -2,17 +2,17 @@ name: Delete old folders from github pages
 
 on:
   workflow_dispatch:
-    inputs:
-        n_days:
-            description: 'Number of days to determine which folders to delete. Example: 7 will delete all folders older than 7 days'
-            required: true
-            default: "7"
-        folder_name:
-            description: 'Name of the folder where you store the reports. Default is root'
-            required: true
-            default: '.'
-  schedule:
-    - cron: '0 0 * * 0' # Runs every Sunday at midnight
+  #   inputs:
+  #       n_days:
+  #           description: 'Number of days to determine which folders to delete. Example: 7 will delete all folders older than 7 days'
+  #           required: true
+  #           default: "7"
+  #       folder_name:
+  #           description: 'Name of the folder where you store the reports. Default is root'
+  #           required: true
+  #           default: '.'
+  # schedule:
+  #   - cron: '0 0 * * 0' # Runs every Sunday at midnight
 
 jobs:
   delete_old_folders:

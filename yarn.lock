@@ -985,9 +985,17 @@ __metadata:
   dependencies:
     "@playwright/test": "npm:^1.44.0"
     "@types/node": "npm:^20.12.11"
+    playwright-json-summary-reporter: "npm:^1.0.1"
     playwright-slack-report: "npm:^1.1.72"
   languageName: unknown
   linkType: soft
+
+"playwright-json-summary-reporter@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "playwright-json-summary-reporter@npm:1.0.1"
+  checksum: 10c0/7dd1777e286b4d92ad8060863eeed251b68cf3aa657b87a40c9c7dda2c6c031dac3f754c538966b13ee6e6c1e6f43457be6e5771df812e4f1db083150c95a22a
+  languageName: node
+  linkType: hard
 
 "playwright-slack-report@npm:^1.1.72":
   version: 1.1.72

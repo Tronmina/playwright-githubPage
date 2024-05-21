@@ -6,12 +6,16 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: process.env.CI 
-  ? [
+  reporter: process.env.CI ? 
+  [
       ["line"],
       ["html", { open: "never" }],
-      ["junit", { outputFile: "junit.xml" }],
-    ] : [["html", { open: "never" }],],
+      ["junit", { outputFile: "junit.xml" }]
+      ['playwright-json-summary-reporter'],
+  ] : [
+      ["html", { open: "never" }],
+      ['playwright-json-summary-reporter'],
+  ],
   use: {
     trace: 'on-first-retry',
   },

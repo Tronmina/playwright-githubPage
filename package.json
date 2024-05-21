@@ -8,5 +8,8 @@
   },
   "scripts": {
     "test": "playwright test"
+  },
+  "dependencies": {
+    "playwright-json-summary-reporter": "^1.0.1"
   }
 }
