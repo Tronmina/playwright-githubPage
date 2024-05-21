@@ -28,12 +28,6 @@ jobs:
       with:
         node-version: 20
 
-    - name: corepack enable 📦
-      run: corepack enable && yarn --version && yarn set version 4.1.1 
-
-    - name: yarn install 📦
-      run: yarn install
-
     - name: Run Playwright Tests  🧪
       uses: docker://mcr.microsoft.com/playwright:v1.44.0-jammy
       with:
