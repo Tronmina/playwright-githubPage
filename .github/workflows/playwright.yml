@@ -15,8 +15,9 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.44.0-jammy
+    env:
+      SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
+
 
     steps:
     - name: Checkout 🛎
@@ -34,7 +35,9 @@ jobs:
       run: yarn install
 
     - name: Run Playwright Tests  🧪
-      run: yarn playwright test
+      uses: docker://mcr.microsoft.com/playwright:v1.44.0-jammy
+      with:
+          args: yarn playwright test
       env:
         HOME: /root # required for playwright to run in container
 
