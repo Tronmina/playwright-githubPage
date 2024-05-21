@@ -28,6 +28,10 @@ jobs:
       with:
         node-version: 20
 
+
+    - name: yarn install 📦
+      run: yarn install
+
     - name: Run Playwright Tests  🧪
       uses: docker://mcr.microsoft.com/playwright:v1.44.0-jammy
       with:
