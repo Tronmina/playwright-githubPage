@@ -35,6 +35,8 @@ jobs:
 
     - name: Run Playwright Tests  🧪
       run: yarn playwright test
+      env:
+        HOME: /root # required for playwright to run in container
 
     - name: Git Action Test Report
       uses: dorny/test-reporter@v1
