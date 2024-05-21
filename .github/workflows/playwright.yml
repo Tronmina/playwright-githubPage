@@ -28,7 +28,6 @@ jobs:
       with:
         node-version: 20
 
-
     - name: yarn install 📦
       run: yarn install
 
