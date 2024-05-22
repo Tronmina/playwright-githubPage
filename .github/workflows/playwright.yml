@@ -116,8 +116,7 @@ jobs:
                 short: false
               }]
             }]
-          }  
-
+          }
 
   # 第二個工作：合併報告並上傳
   publish_html_report:
@@ -183,10 +182,6 @@ jobs:
         custom_payload: |
           {
             attachments: [{
-              title: "Playwright Test Report",
-              title_link: "https://${{ github.repository_owner }}.github.io/playwright-githubpage/${{ steps.timestampid.outputs.timestamp }}/",
-              text: "Test results",
-              color: "#36a64f",
-              }]
+              title: `Test`,
             }]
-          }  
+          }
