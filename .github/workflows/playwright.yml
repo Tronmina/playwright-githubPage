@@ -79,11 +79,7 @@ jobs:
             attachments: [{
               color: '${{ job.status }}' === 'success' ? 'good' : 'danger',
               title: `Playwright Demo Automation Results :test_tube:`,
-              fields: [{
-                title: 'Site Under Test',
-                value: '${{ env.APP_URL }}',
-                short: true
-              },
+              fields: [
               {
                 title: 'Repo',
                 value: `${process.env.AS_REPO}`,
@@ -113,6 +109,11 @@ jobs:
                 title: 'Failures',
                 value: `${{ env.FAILURES }}` === '' ? 'No failures' : `${{ env.FAILURES }}`.match(/.spec.ts/g).length > 10 ? `Too many failures to print. Please go to GitHub to see full list of failures` : '```${{ env.FAILURES }}```'.replace(/ /g, '\n'),
                 short: false
+              },
+              {
+                title: 'HTML Report',
+                vlalue: `https://${{ github.repository_owner }}.github.io/playwright-githubpage/${{ steps.timestampid.outputs.timestamp }}/`,
+                short: false
               }]
             }]
           }  
@@ -124,6 +125,8 @@ jobs:
     if: always()
     needs: [test]
     runs-on: ubuntu-latest
+    env: 
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 
     outputs:
         timestamp: ${{ steps.timestampid.outputs.timestamp }}
@@ -169,3 +172,20 @@ jobs:
       
     - name: Write URL in summary
       run: echo "### Test results (link available after 20 secs) - https://${{ github.repository_owner }}.github.io/playwright-githubpage/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
+
+    - name: Send Slack Notification
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: custom
+        fields: repo,eventName,workflow,job,took
+        custom_payload: |
+          {
+            attachments: [{
+              title: "Playwright Test Report",
+              title_link: "https://${{ github.repository_owner }}.github.io/playwright-githubpage/${{ steps.timestampid.outputs.timestamp }}/",
+              text: "Test results",
+              color: "#36a64f",
+              }]
+            }]
+          }  
