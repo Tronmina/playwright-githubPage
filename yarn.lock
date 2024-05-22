@@ -181,6 +181,11 @@ diff@^4.0.1:
   resolved "https://registry.yarnpkg.com/diff/-/diff-4.0.2.tgz#60f3aecb89d5fae520c11aa19efc2bb982aade7d"
   integrity sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==
 
+dotenv@^16.4.5:
+  version "16.4.5"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.4.5.tgz#cdd3b3b604cb327e286b4762e13502f717cb099f"
+  integrity sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==
+
 eventemitter3@^3.1.0:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-3.1.2.tgz#2d3d48f9c346698fce83a85d7d664e98535df6e7"
@@ -297,7 +302,7 @@ playwright-json-summary-reporter@^1.0.1:
   resolved "https://registry.yarnpkg.com/playwright-json-summary-reporter/-/playwright-json-summary-reporter-1.0.1.tgz#bddd29bad81dc42a327a1bf7d104c1a05f24648a"
   integrity sha512-OoCMH5tcKoqYy1lF5rPJe058Ntj15vbHb0IuMIVUrsRd2vjzO2zPi5crvPgc60+F5pgSofaZjh44rEUMJf6waw==
 
-playwright-slack-report@^1.1.72:
+playwright-slack-report@^1.1.80:
   version "1.1.80"
   resolved "https://registry.yarnpkg.com/playwright-slack-report/-/playwright-slack-report-1.1.80.tgz#79ffe5fef2b4b5db07b9aaff56dd3f2b95dcb9ed"
   integrity sha512-n7C6U914/KgXji7V+X4uZWdlJshvfrq+7x8Ad9BShSRCDbh4mFtZQdbzllP9XNjgvzEQE4uZVIsNAG7mPlZH/A==

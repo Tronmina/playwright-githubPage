@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 
 
     steps:
@@ -33,10 +34,11 @@ jobs:
 
     - name: Run Playwright Tests  🧪
       uses: docker://mcr.microsoft.com/playwright:v1.44.0-jammy
-      with:
-          args: yarn test
       env:
         HOME: /root # required for playwright to run in container
+      with:
+          args: yarn test
+      
 
     - name: Read Summary Report to Get Test Results
       if: always()
@@ -114,8 +116,6 @@ jobs:
               }]
             }]
           }  
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 
 
   # 第二個工作：合併報告並上傳
