@@ -127,6 +127,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+      SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
 
     outputs:
         timestamp: ${{ steps.timestampid.outputs.timestamp }}
