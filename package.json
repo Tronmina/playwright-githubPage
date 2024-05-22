@@ -6,7 +6,7 @@
     "playwright-slack-report": "^1.1.72"
   },
   "scripts": {
-    "test": "playwright test"
+    "test": "npx playwright test"
   },
   "dependencies": {
     "playwright-json-summary-reporter": "^1.0.1"

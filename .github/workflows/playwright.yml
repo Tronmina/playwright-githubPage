@@ -34,7 +34,7 @@ jobs:
     - name: Run Playwright Tests  🧪
       uses: docker://mcr.microsoft.com/playwright:v1.44.0-jammy
       with:
-          args: yarn playwright test
+          args: yarn test
       env:
         HOME: /root # required for playwright to run in container
 
@@ -80,11 +80,6 @@ jobs:
               fields: [{
                 title: 'Site Under Test',
                 value: '${{ env.APP_URL }}',
-                short: true
-              },
-              {
-                title: 'Triggered By',
-                value: [{'origin': 'pull_request', 'new': 'Pull Request'}, {'origin': 'schedule', 'new': 'Schedule'}, {'origin': 'repository_dispatch', 'new': 'Deploy'}, {'origin': 'workflow_dispatch', 'new': 'GitHub Actions'}].find(item => item.origin === `${process.env.AS_EVENT_NAME}`).new || `${process.env.AS_EVENT_NAME}`,
                 short: true
               },
               {
