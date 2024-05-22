@@ -182,6 +182,13 @@ jobs:
         custom_payload: |
           {
             attachments: [{
-              title: `Test`,
+              title: `Demo HTML Report`,
+              fields: [
+                {
+                  title: 'HTML Report',
+                  value: `https://${{ github.repository_owner }}.github.io/playwright-githubpage/${{ steps.timestampid.outputs.timestamp }}/`,
+                  short: true
+                },
+
             }]
           }
