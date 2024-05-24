@@ -1,41 +1,22 @@
-name: Delete old folders from github pages
-
+name: Clear Content
 on:
   workflow_dispatch:
-    inputs:
-        n_days:
-            description: 'Number of days to determine which folders to delete. Example: 7 will delete all folders older than 7 days'
-            required: true
-            default: "7"
-        folder_name:
-            description: 'Name of the folder where you store the reports. Default is root'
-            required: true
-            default: '.'
   schedule:
-    - cron: '0 0 * * 0' # Runs every Sunday at midnight
-
+    - cron: '0 0 * * 0'
 jobs:
-  delete_old_folders:
+  clear:
     runs-on: ubuntu-latest
     permissions:
-        contents: write
-
+      contents: write
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
         with: 
           ref: gh-pages
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
-
-      - name: Pray then Run the script
-        run: python rm_old_folders.py --n-days ${{ github.event.inputs.n_days }} --folder-name ${{ github.event.inputs.folder_name }}
-
-      - name: Commit all changed files back to the repository
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          branch: gh-pages
-          commit_message: Delete folders older than ${{ github.event.inputs.n_days }} days
+      - name: Clear content except workflows
+        run: |
+          find. | grep -v ".github" | xargs rm -rf
+          git add.
+          git commit -m "Clear content"
+          git push
