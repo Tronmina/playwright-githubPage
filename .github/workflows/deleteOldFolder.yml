@@ -17,6 +17,6 @@ jobs:
       - name: Clear content except workflows
         run: |
           find. | grep -v ".github" | xargs rm -rf
-          git add.
+          git add .
           git commit -m "Clear content"
           git push
