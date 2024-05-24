@@ -133,12 +133,12 @@ jobs:
     - name: Read Summary Report to Get Test Results
       if: always()
       run: |
-        STATUS=$(cat ./summary.json | jq -r '.status')
+        STATUS=$(cat ./summary-report/summary.json | jq -r '.status')
         echo "STATUS=$STATUS" >> $GITHUB_ENV 
-        PASSED=$(cat ./summary.json | jq -r '.passed[]' | tr '\n' ' ')
+        PASSED=$(cat ./summary-report/summary.json | jq -r '.passed[]' | tr '\n' ' ')
         echo "PASSED=$PASSED" >> $GITHUB_ENV 
-        TIMEOUT=$(cat ./summary.json | jq -r '.timedOut[]' | tr '\n' ' ' | sed 's/ /--->TIMEOUT /g')
-        FAILURES=$(cat ./summary.json | jq -r '.failed[]' | tr '\n' ' ')
+        TIMEOUT=$(cat ./summary-report/summary.json | jq -r '.timedOut[]' | tr '\n' ' ' | sed 's/ /--->TIMEOUT /g')
+        FAILURES=$(cat ./summary-report/summary.json | jq -r '.failed[]' | tr '\n' ' ')
         FAILURES+=$TIMEOUT
         echo "FAILURES=$FAILURES" >> $GITHUB_ENV
 
@@ -158,7 +158,7 @@ jobs:
           {
             attachments: [{
               color: '${{ job.status }}' === 'success' ? 'good' : 'danger',
-              title: `Playwright Demo Automation Results :test_tube:`,
+              title: `Playwright Demo Automation Results \n https://${{ github.repository_owner }}.github.io/playwright-githubpage/${{ steps.timestampid.outputs.timestamp }}/`,
               fields: [
               {
                 title: 'Repo',
