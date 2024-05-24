@@ -18,8 +18,6 @@ jobs:
     env:
       SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-
-
     steps:
     - name: Checkout 🛎
       uses: actions/checkout@v3
@@ -39,7 +37,6 @@ jobs:
       with:
           args: yarn test
       
-
     - name: Read Summary Report to Get Test Results
       if: always()
       run: |
@@ -68,6 +65,86 @@ jobs:
         path: playwright-report/
         retention-days: 10
 
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: summary.json
+        path: "**/summary.json"
+        retention-days: 10
+
+  # 第二個工作：合併報告並上傳
+  publish_html_report:
+    name: Publish HTML Report
+    if: always()
+    needs: [test]
+    runs-on: ubuntu-latest
+    env: 
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+      SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
+
+    outputs:
+        timestamp: ${{ steps.timestampid.outputs.timestamp }}
+
+    steps:
+    - name: Set a timestamp 
+      id: timestampid
+    # this will store current time with UTC in outputs. timestamp (eg of value: 20231028_233147Z)
+      run: echo "timestamp=$(date --utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
+
+    - name: Checkout 🛎
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js 📦
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20
+
+    # we now download the reports uploaded previously to merge them and create one single html report
+    - name: Download reports from GitHub Actions Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: playwright-report # name of the file stored as artifact (as uploaded at the previous job)
+        path: playwright-report/
+
+    - name: Download summary
+      uses: actions/download-artifact@v4
+      with:
+        name: summary.json # name of the file stored as artifact (as uploaded at the previous job)
+        path: summary.json
+        
+    - name: Display structure of downloaded files
+      run: ls -R
+
+    - name: /[OPTIONAL] Upload full html report to artifacts for history
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report-${{ steps.timestampid.outputs.timestamp }} # name of the file you want to have once its uploaded
+        path: playwright-report # path where the reports are, from where to take the files
+        retention-days: 5
+
+    - name: Push the new files to github pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./playwright-report # from what folder to take files. It takes only contents
+        destination_dir: ${{ steps.timestampid.outputs.timestamp }} # a sub-directory where to publish to avoid overwriting other reports
+  
+    - name: Read Summary Report to Get Test Results
+      if: always()
+      run: |
+        STATUS=$(cat ./summary.json | jq -r '.status')
+        echo "STATUS=$STATUS" >> $GITHUB_ENV 
+        PASSED=$(cat ./summary.json | jq -r '.passed[]' | tr '\n' ' ')
+        echo "PASSED=$PASSED" >> $GITHUB_ENV 
+        TIMEOUT=$(cat ./summary.json | jq -r '.timedOut[]' | tr '\n' ' ' | sed 's/ /--->TIMEOUT /g')
+        FAILURES=$(cat ./summary.json | jq -r '.failed[]' | tr '\n' ' ')
+        FAILURES+=$TIMEOUT
+        echo "FAILURES=$FAILURES" >> $GITHUB_ENV
+
+    - name: Write URL in summary
+      run: echo "### Test results (link available after 20 secs) - https://${{ github.repository_owner }}.github.io/playwright-githubpage/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
+    
     - name: Send Slack Notification
       if: always()
       uses: 8398a7/action-slack@v3
@@ -115,73 +192,5 @@ jobs:
                 vlalue: `https://${{ github.repository_owner }}.github.io/playwright-githubpage/${{ steps.timestampid.outputs.timestamp }}/`,
                 short: false
               }]
-            }]
-          }
-
-  # 第二個工作：合併報告並上傳
-  publish_html_report:
-    name: Publish HTML Report
-    if: always()
-    needs: [test]
-    runs-on: ubuntu-latest
-    env: 
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-      SLACK_BOT_USER_OAUTH_TOKEN: ${{ secrets.SLACK_BOT_USER_OAUTH_TOKEN }}
-
-    outputs:
-        timestamp: ${{ steps.timestampid.outputs.timestamp }}
-
-    steps:
-    - name: Set a timestamp 
-      id: timestampid
-    # this will store current time with UTC in outputs. timestamp (eg of value: 20231028_233147Z)
-      run: echo "timestamp=$(date --utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
-
-    - name: Checkout 🛎
-      uses: actions/checkout@v3
-
-    - name: Setup Node.js 📦
-      uses: actions/setup-node@v3
-      with:
-        node-version: 20
-
-    # we now download the reports uploaded previously to merge them and create one single html report
-    - name: Download reports from GitHub Actions Artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: playwright-report # name of the file stored as artifact (as uploaded at the previous job)
-        path: playwright-report/
-        
-    - name: Display structure of downloaded files
-      run: ls -R
-
-    - name: /[OPTIONAL] Upload full html report to artifacts for history
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: playwright-report-${{ steps.timestampid.outputs.timestamp }} # name of the file you want to have once its uploaded
-        path: playwright-report # path where the reports are, from where to take the files
-        retention-days: 5
-
-    - name: Push the new files to github pages
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./playwright-report # from what folder to take files. It takes only contents
-        destination_dir: ${{ steps.timestampid.outputs.timestamp }} # a sub-directory where to publish to avoid overwriting other reports
-      
-    - name: Write URL in summary
-      run: echo "### Test results (link available after 20 secs) - https://${{ github.repository_owner }}.github.io/playwright-githubpage/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
-
-    - name: Send Slack Notification
-      if: always()
-      uses: 8398a7/action-slack@v3
-      with:
-        status: custom
-        fields: repo,eventName,workflow,job,took
-        custom_payload: |
-          {
-            attachments: [{
-              title: `https://${{ github.repository_owner }}.github.io/playwright-githubpage/${{ steps.timestampid.outputs.timestamp }}/`,
             }]
           }
