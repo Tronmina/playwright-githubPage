@@ -143,7 +143,10 @@ jobs:
         echo "FAILURES=$FAILURES" >> $GITHUB_ENV
 
     - name: Write URL in summary
-      run: echo "### Test results (link available after 20 secs) - https://${{ github.repository_owner }}.github.io/playwright-githubpage/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
+      run: 
+        echo "### Test results (link available after 20 secs) - https://${{ github.repository_owner }}.github.io/playwright-githubpage/${{ steps.timestampid.outputs.timestamp }}/" >> $GITHUB_STEP_SUMMARY
+        URL=`https://${{ github.repository_owner }}.github.io/playwright-githubpage/${{ steps.timestampid.outputs.timestamp }}/`
+        echo "URL=$URL" $GITHUB_ENV
     
     - name: Send Slack Notification
       if: always()
@@ -184,7 +187,7 @@ jobs:
               },
               {
                 title: 'HTML Report',
-                vlalue: `${$GITHUB_STEP_SUMMARY}`,
+                vlalue: `${env.URL}`,
                 short: true
               }]
             }]
