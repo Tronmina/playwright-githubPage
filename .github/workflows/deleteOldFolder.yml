@@ -15,10 +15,9 @@ jobs:
         with: 
           ref: gh-pages 
 
-      - name: Clear content except workflows
+      - name: Execute cleanup command
         run: |
-          # 使用完整路径调用 find 命令，确保在 GitHub Actions 环境中正确识别
-          /usr/bin/find. | grep -v ".github" | xargs rm -rf
+          ls -d */ | grep -v ".github/" | xargs rm -rf
 
       - name: Git Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v5
