@@ -188,7 +188,7 @@ jobs:
               {
                 title: 'HTML Report',
                 vlalue: `${{env.URL}}`,
-                short: true
+                short: false
               }]
             }]
           }
